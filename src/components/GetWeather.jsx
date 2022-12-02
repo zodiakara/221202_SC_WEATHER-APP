@@ -1,34 +1,47 @@
-import { useEffect } from "react"
+import { useState } from "react";
+import { Form } from "react-bootstrap";
 
-function () {
-const apiKey = '4c5e2d1e72b969caaf619ce5d0ff7e70'
-const city= 'london'
+const GetWeather = () => {
+  const apiKey = "4c5e2d1e72b969caaf619ce5d0ff7e70";
 
-const apiurl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${apiKey}`
+  const [query, setQuery] = useState("london");
+  const [city, setCity] = useState([]);
 
-useEffect(()=>{
-    getWeather()
-},[apiurl])
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${apiKey}`;
 
-const getWeather = async () => {
+  const handleChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-        let response = await fetch(apiurl)
+      let response = await fetch(apiUrl);
 
-    if (response.ok) {
-        let data = await response.json()
-        console.log(data)
+      if (response.ok) {
+        let data = await response.json();
+        console.log(data);
+        setCity(data);
+      } else {
+        console.log("error fetching data");
+      }
+    } catch (e) {
+      console.log(e);
     }
-    else {
-        console.log('error fetching data')
-    }
-    }
-    catch (e){
-        console.log(e)
-    }
-}
+  };
 
+  return (
+    <div>
+      <Form onSubmit={handleSubmit}>
+        <Form.Control
+          type="search"
+          value={query}
+          onChange={handleChange}
+          placeholder="type your city here ..."
+        />
+      </Form>
+    </div>
+  );
+};
 
-    return (  );
-}
-
-export default ;
+export default GetWeather;
